@@ -16,6 +16,10 @@ class Dialogs:
         self.app = app
         self.layer = Gtk.Box(css_classes=["modal-scrim"], visible=False)
         self.stack = []
+        # A click on the dimmed area around the dialog cancels it
+        click = Gtk.GestureClick()
+        click.connect("pressed", self.on_scrim_click)
+        self.layer.add_controller(click)
 
     def __bool__(self):
         return bool(self.stack)
@@ -52,6 +56,10 @@ class Dialogs:
         if cancelled and modal["cancel"]:
             modal["cancel"]()
 
+    def on_scrim_click(self, _gesture, _n, x, y):
+        if self.stack and self.layer.pick(x, y, Gtk.PickFlags.DEFAULT) is self.layer:
+            self.close(cancelled=True)
+
     def close_all(self):
         while self.stack:
             self.close()
@@ -69,7 +77,14 @@ class Dialogs:
         if width:
             box.set_size_request(px(width), -1)
         if title:
-            box.append(Gtk.Label(label=title, css_classes=["modal-title"], xalign=0, wrap=True))
+            row = Gtk.Box(spacing=px(12))
+            row.append(Gtk.Label(label=title, css_classes=["modal-title"], xalign=0, wrap=True, hexpand=True))
+            # Mouse users close it here; on the gamepad B does the same, so it takes no focus
+            close = Gtk.Button(icon_name="window-close-symbolic", css_classes=["icon-button"], focusable=False,
+                               valign=Gtk.Align.START, tooltip_text=_("Close"))
+            close.connect("clicked", lambda *_args: self.close(cancelled=True))
+            row.append(close)
+            box.append(row)
         if text:
             box.append(Gtk.Label(label=text, css_classes=["modal-text"], xalign=0, wrap=True))
         return box
