@@ -1,0 +1,13 @@
+#!/bin/sh
+# Big Screen session (TV mode): Hyprland with its own config and Big Screen as the interface.
+# Installed to /usr/local/bin because the greeter cannot read the user's home.
+config="${XDG_CONFIG_HOME:-$HOME/.config}/caelestia-bigscreen/hyprland-session.lua"
+if [ ! -f "$config" ]; then
+    mkdir -p "$(dirname "$config")"
+    sed "s|@KB_LAYOUT@|us|" /usr/local/share/caelestia-bigscreen/hyprland-session.lua.in > "$config"
+fi
+export XDG_SESSION_DESKTOP=caelestia-bigscreen XDG_CURRENT_DESKTOP=Hyprland XDG_SESSION_TYPE=wayland
+if command -v start-hyprland >/dev/null 2>&1; then
+    exec start-hyprland -- -c "$config"
+fi
+exec Hyprland --config "$config"

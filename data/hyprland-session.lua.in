@@ -1,0 +1,72 @@
+-- Caelestia Big Screen session (TV mode): a minimal Hyprland without the desktop
+-- shell, with Big Screen as the main interface. Created by install.sh --session;
+-- feel free to edit it.
+
+local home  = os.getenv("HOME")
+local bigscreen = home .. "/.local/bin/caelestia-bigscreen"
+
+-- Every screen uses its preferred mode (the TV picks its own)
+hl.monitor({
+    output   = "",
+    mode     = "preferred",
+    position = "auto",
+    scale    = 1,
+})
+
+hl.env("XDG_CURRENT_DESKTOP", "Hyprland")
+hl.env("XDG_SESSION_DESKTOP", "caelestia-bigscreen")
+hl.env("XDG_SESSION_TYPE", "wayland")
+hl.env("GDK_BACKEND", "wayland,x11")
+hl.env("QT_QPA_PLATFORM", "wayland;xcb")
+hl.env("SDL_VIDEODRIVER", "wayland,x11")
+hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
+
+hl.config({
+    input = {
+        kb_layout = "@KB_LAYOUT@",
+    },
+    general = {
+        gaps_in     = 0,
+        gaps_out    = 0,
+        border_size = 0,
+    },
+    decoration = {
+        rounding = 0,
+        blur     = {
+            enabled = true,
+            size    = 8,
+            passes  = 2,
+        },
+    },
+    misc = {
+        disable_hyprland_logo     = true,
+        force_default_wallpaper   = 0,
+        focus_on_activate         = true,
+        on_focus_under_fullscreen = 2,
+        background_color          = "rgb(000000)",
+    },
+    -- Hide the cursor while it is not being used (gamepad in hand)
+    cursor = {
+        inactive_timeout  = 3,
+        hide_on_key_press = true,
+    },
+})
+
+-- Regular windows fill the screen; floating dialogs keep floating
+hl.window_rule({ match = { float = false }, maximize = true })
+
+-- Blur behind the quick menu shown over games
+hl.layer_rule({ match = { namespace = "^caelestia-bigscreen$" }, blur = true, ignore_alpha = 0.01, animation = "fade" })
+
+hl.on("hyprland.start", function()
+    hl.exec_cmd("gnome-keyring-daemon --start --components=secrets")
+    hl.exec_cmd("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1")
+    -- If Big Screen ever exits, start it again
+    hl.exec_cmd("sh -c 'while :; do " .. bigscreen .. " --session; sleep 1; done'")
+end)
+
+-- Keyboard escape hatches
+hl.bind("SUPER + G", hl.dsp.exec_cmd(bigscreen .. " --toggle"))
+hl.bind("SUPER + Return", hl.dsp.exec_cmd("foot"))
+hl.bind("ALT + F4", hl.dsp.window.close())
+hl.bind("SUPER + SHIFT + Escape", hl.dsp.exit())

@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Caelestia Big Screen (TV mode)
+Comment=TV interface to play with a gamepad, without the desktop shell
+Exec=/usr/local/bin/caelestia-bigscreen-session
+DesktopNames=Hyprland

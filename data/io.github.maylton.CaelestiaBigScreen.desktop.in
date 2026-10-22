@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=Caelestia Big Screen
+GenericName=TV Mode
+GenericName[pt_BR]=Modo TV
+Comment=Full-screen TV interface to play with a gamepad
+Comment[pt_BR]=Interface de TV em tela cheia para jogar com o controle
+Exec=@BIN@
+Icon=input-gaming
+Terminal=false
+Categories=Game;
+Keywords=tv;bigscreen;big picture;gamepad;controller;couch;
+StartupNotify=false
