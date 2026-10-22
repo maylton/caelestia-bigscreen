@@ -457,7 +457,7 @@ class AppearanceSection(Section):
 class LibrarySection(Section):
     key, title, icon = "library", N_("Library"), "applications-games-symbolic"
     subtitle = N_("Game and app sources. Heroic, Lutris and similar launchers show up through the shortcuts "
-                  "they create.")
+                  "they create. Apps hidden in the Caelestia launcher are hidden here too.")
 
     def populate(self):
         sources = self.app.config["sources"]

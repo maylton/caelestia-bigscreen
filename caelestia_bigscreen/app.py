@@ -12,7 +12,7 @@ from .dialogs import Dialogs, Splash, Toast
 from .gamepad import GamepadManager
 from .header import TABS, Header
 from .i18n import _
-from .library import Library, launch
+from .library import SHELL_CONFIG, Library, launch
 from .pages.home import GridPage, HomePage
 from .pages.quickmenu import QuickMenu
 from .pages.settings import SettingsPage
@@ -63,6 +63,7 @@ class BigScreenApp(Adw.Application):
         self.session_mode = False
         self.quick_open = False
         self.home_dirty = False
+        self.library_dirty = False
         self.built_scale = None
         self.monitor = None
         self.status_source = 0
@@ -86,6 +87,9 @@ class BigScreenApp(Adw.Application):
         self.session = GameSession()
         self.session.connect("started", self.on_game_started)
         self.session.connect("ended", self.on_game_ended)
+        # Apps hidden in the Caelestia launcher are hidden here too
+        self.shell_monitor = Gio.File.new_for_path(str(SHELL_CONFIG)).monitor_file(Gio.FileMonitorFlags.NONE, None)
+        self.shell_monitor.connect("changed", self.on_shell_config_changed)
         self.hold()
         self.monitor = self.pick_monitor()
         self.theme.apply(self.monitor)
@@ -242,9 +246,11 @@ class BigScreenApp(Adw.Application):
     def bring_front(self):
         if not self.win.get_visible():
             self.prepare_map()
-        if self.home_dirty:
+        if self.library_dirty:
+            self.library_changed()
+        elif self.home_dirty:
             self.home.rebuild()
-            self.home_dirty = False
+        self.home_dirty = self.library_dirty = False
         self.set_front(True)
         self.header.update()
         if not self.status_source:
@@ -355,6 +361,11 @@ class BigScreenApp(Adw.Application):
         if not self.quick_open:
             return
         self.quick_open = False
+        # If the focus stays inside the panel while it hides, GTK moves it to the first
+        # header tab, which would switch to Home over whatever was chosen in the menu
+        current = self.win.get_focus()
+        if current is not None and current.is_ancestor(self.quick):
+            self.win.set_focus(None)
         self.quick_scrim.set_visible(False)
         self.quick_revealer.set_transition_duration(220 if animate else 0)
         self.quick_revealer.set_reveal_child(False)
@@ -601,6 +612,14 @@ class BigScreenApp(Adw.Application):
     def reload_library(self):
         self.library.reload()
         self.library_changed()
+
+    def on_shell_config_changed(self, _monitor, _file, _other, event):
+        if event in (Gio.FileMonitorEvent.CHANGES_DONE_HINT, Gio.FileMonitorEvent.CREATED):
+            # Rebuilding in front of the user would move the focus; do it when hidden
+            if self.visible:
+                self.library_dirty = True
+            else:
+                self.library_changed()
 
     def library_changed(self):
         for page in (self.home, self.games, self.apps):

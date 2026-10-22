@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: caelestia-bigscreen 0.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/maylton/caelestia-bigscreen/issues\n"
-"POT-Creation-Date: 2026-10-22 07:42-0300\n"
+"POT-Creation-Date: 2026-10-22 12:37-0300\n"
 "PO-Revision-Date: 2026-10-21 22:00-0300\n"
 "Last-Translator: Maylton Fernandes\n"
 "Language-Team: Portuguese (Brazil)\n"
@@ -14,177 +14,181 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: caelestia_bigscreen/app.py:182 caelestia_bigscreen/header.py:8
+#: caelestia_bigscreen/app.py:186 caelestia_bigscreen/header.py:8
 #: caelestia_bigscreen/pages/home.py:35
 msgid "Games"
 msgstr "Jogos"
 
-#: caelestia_bigscreen/app.py:183
+#: caelestia_bigscreen/app.py:187
 msgid "No games found."
 msgstr "Nenhum jogo encontrado."
 
-#: caelestia_bigscreen/app.py:184 caelestia_bigscreen/header.py:8
+#: caelestia_bigscreen/app.py:188 caelestia_bigscreen/header.py:8
 #: caelestia_bigscreen/pages/home.py:44
 msgid "Apps"
 msgstr "Apps"
 
-#: caelestia_bigscreen/app.py:184
+#: caelestia_bigscreen/app.py:188
 msgid "No apps found."
 msgstr "Nenhum app encontrado."
 
-#: caelestia_bigscreen/app.py:547
+#: caelestia_bigscreen/app.py:558
 msgid "Type"
 msgstr "Digitar"
 
-#: caelestia_bigscreen/app.py:547
+#: caelestia_bigscreen/app.py:558
 msgid "Delete"
 msgstr "Apagar"
 
-#: caelestia_bigscreen/app.py:547 caelestia_bigscreen/widgets.py:270
+#: caelestia_bigscreen/app.py:558 caelestia_bigscreen/widgets.py:269
 msgid "Space"
 msgstr "Espaço"
 
-#: caelestia_bigscreen/app.py:547
+#: caelestia_bigscreen/app.py:558
 msgid "Shift"
 msgstr "Maiúsculas"
 
-#: caelestia_bigscreen/app.py:548 caelestia_bigscreen/dialogs.py:112
+#: caelestia_bigscreen/app.py:559 caelestia_bigscreen/dialogs.py:127
 msgid "OK"
 msgstr "OK"
 
-#: caelestia_bigscreen/app.py:548 caelestia_bigscreen/app.py:550
-#: caelestia_bigscreen/dialogs.py:83 caelestia_bigscreen/dialogs.py:91
+#: caelestia_bigscreen/app.py:559 caelestia_bigscreen/app.py:561
+#: caelestia_bigscreen/dialogs.py:98 caelestia_bigscreen/dialogs.py:106
 #: caelestia_bigscreen/pages/settings.py:320
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: caelestia_bigscreen/app.py:550 caelestia_bigscreen/app.py:552
+#: caelestia_bigscreen/app.py:561 caelestia_bigscreen/app.py:563
 #: caelestia_bigscreen/pages/settings.py:366
 msgid "Select"
 msgstr "Selecionar"
 
-#: caelestia_bigscreen/app.py:552 caelestia_bigscreen/pages/settings.py:366
+#: caelestia_bigscreen/app.py:563 caelestia_bigscreen/pages/settings.py:366
 msgid "Back"
 msgstr "Voltar"
 
-#: caelestia_bigscreen/app.py:552
+#: caelestia_bigscreen/app.py:563
 msgid "Options"
 msgstr "Opções"
 
-#: caelestia_bigscreen/app.py:552 caelestia_bigscreen/dialogs.py:146
+#: caelestia_bigscreen/app.py:563 caelestia_bigscreen/dialogs.py:161
 #: caelestia_bigscreen/pages/home.py:96
 #: caelestia_bigscreen/pages/quickmenu.py:36
 #: caelestia_bigscreen/pages/settings.py:367
 msgid "Search"
 msgstr "Buscar"
 
-#: caelestia_bigscreen/app.py:554
+#: caelestia_bigscreen/app.py:565
 msgid "Tabs"
 msgstr "Abas"
 
-#: caelestia_bigscreen/app.py:577
+#: caelestia_bigscreen/app.py:588
 #, python-brace-format
 msgid "Volume {value}%"
 msgstr "Volume {value}%"
 
-#: caelestia_bigscreen/app.py:612
+#: caelestia_bigscreen/app.py:631
 #, python-brace-format
 msgid "Could not open: {error}"
 msgstr "Não foi possível abrir: {error}"
 
-#: caelestia_bigscreen/app.py:630
+#: caelestia_bigscreen/app.py:649
 #, python-brace-format
 msgid "Opening {name}… it shows up when ready"
 msgstr "Abrindo {name}… o jogo aparece quando estiver pronto"
 
-#: caelestia_bigscreen/app.py:639
+#: caelestia_bigscreen/app.py:658
 msgid "Log out?"
 msgstr "Sair da sessão?"
 
-#: caelestia_bigscreen/app.py:639
+#: caelestia_bigscreen/app.py:658
 msgid "Open games and apps will be closed."
 msgstr "Os jogos e apps abertos serão fechados."
 
-#: caelestia_bigscreen/app.py:639 caelestia_bigscreen/dialogs.py:176
+#: caelestia_bigscreen/app.py:658 caelestia_bigscreen/dialogs.py:191
 #: caelestia_bigscreen/pages/settings.py:499
 msgid "Log out"
 msgstr "Sair da sessão"
 
-#: caelestia_bigscreen/app.py:642
+#: caelestia_bigscreen/app.py:661
 msgid "Restart the computer?"
 msgstr "Reiniciar o computador?"
 
-#: caelestia_bigscreen/app.py:642 caelestia_bigscreen/dialogs.py:182
+#: caelestia_bigscreen/app.py:661 caelestia_bigscreen/dialogs.py:197
 #: caelestia_bigscreen/pages/settings.py:505
 msgid "Restart"
 msgstr "Reiniciar"
 
-#: caelestia_bigscreen/app.py:644
+#: caelestia_bigscreen/app.py:663
 msgid "Shut down the computer?"
 msgstr "Desligar o computador?"
 
-#: caelestia_bigscreen/app.py:644 caelestia_bigscreen/dialogs.py:183
+#: caelestia_bigscreen/app.py:663 caelestia_bigscreen/dialogs.py:198
 #: caelestia_bigscreen/pages/settings.py:506
 msgid "Shut down"
 msgstr "Desligar"
 
-#: caelestia_bigscreen/dialogs.py:131
+#: caelestia_bigscreen/dialogs.py:84 caelestia_bigscreen/pages/quickmenu.py:75
+msgid "Close"
+msgstr "Fechar"
+
+#: caelestia_bigscreen/dialogs.py:146
 msgid "Nothing found"
 msgstr "Nada encontrado"
 
-#: caelestia_bigscreen/dialogs.py:146 caelestia_bigscreen/dialogs.py:168
+#: caelestia_bigscreen/dialogs.py:161 caelestia_bigscreen/dialogs.py:183
 #: caelestia_bigscreen/pages/settings.py:138
 msgid "Open"
 msgstr "Abrir"
 
-#: caelestia_bigscreen/dialogs.py:146
+#: caelestia_bigscreen/dialogs.py:161
 msgid "Game or app name"
 msgstr "Nome do jogo ou aplicativo"
 
-#: caelestia_bigscreen/dialogs.py:157
+#: caelestia_bigscreen/dialogs.py:172
 msgid "Added to favorites"
 msgstr "Adicionado aos favoritos"
 
-#: caelestia_bigscreen/dialogs.py:157
+#: caelestia_bigscreen/dialogs.py:172
 msgid "Removed from favorites"
 msgstr "Removido dos favoritos"
 
-#: caelestia_bigscreen/dialogs.py:162
+#: caelestia_bigscreen/dialogs.py:177
 #, python-brace-format
 msgid "{name} is hidden (Settings › Library shows it again)"
 msgstr "{name} foi ocultado (Configurações › Biblioteca para mostrar)"
 
-#: caelestia_bigscreen/dialogs.py:168 caelestia_bigscreen/pages/home.py:72
+#: caelestia_bigscreen/dialogs.py:183 caelestia_bigscreen/pages/home.py:72
 msgid "Play"
 msgstr "Jogar"
 
-#: caelestia_bigscreen/dialogs.py:169
+#: caelestia_bigscreen/dialogs.py:184
 msgid "Remove from favorites"
 msgstr "Remover dos favoritos"
 
-#: caelestia_bigscreen/dialogs.py:169
+#: caelestia_bigscreen/dialogs.py:184
 msgid "Add to favorites"
 msgstr "Adicionar aos favoritos"
 
-#: caelestia_bigscreen/dialogs.py:171
+#: caelestia_bigscreen/dialogs.py:186
 msgid "Hide from library"
 msgstr "Ocultar da biblioteca"
 
-#: caelestia_bigscreen/dialogs.py:178 caelestia_bigscreen/pages/settings.py:502
+#: caelestia_bigscreen/dialogs.py:193 caelestia_bigscreen/pages/settings.py:502
 msgid "Back to desktop"
 msgstr "Voltar à área de trabalho"
 
-#: caelestia_bigscreen/dialogs.py:179 caelestia_bigscreen/pages/home.py:52
+#: caelestia_bigscreen/dialogs.py:194 caelestia_bigscreen/pages/home.py:52
 #: caelestia_bigscreen/pages/quickmenu.py:59
 #: caelestia_bigscreen/pages/settings.py:494
 msgid "Power"
 msgstr "Energia"
 
-#: caelestia_bigscreen/dialogs.py:181 caelestia_bigscreen/pages/settings.py:504
+#: caelestia_bigscreen/dialogs.py:196 caelestia_bigscreen/pages/settings.py:504
 msgid "Suspend"
 msgstr "Suspender"
 
-#: caelestia_bigscreen/dialogs.py:236
+#: caelestia_bigscreen/dialogs.py:251
 #, python-brace-format
 msgid "Opening {name}…"
 msgstr "Abrindo {name}…"
@@ -310,10 +314,6 @@ msgstr "Fechar “{title}”?"
 #: caelestia_bigscreen/pages/quickmenu.py:74
 msgid "Unsaved progress may be lost."
 msgstr "O progresso não salvo pode ser perdido."
-
-#: caelestia_bigscreen/pages/quickmenu.py:75
-msgid "Close"
-msgstr "Fechar"
 
 #: caelestia_bigscreen/pages/settings.py:67
 msgid "Volume and output device (TV/HDMI, speakers, headphones)."
@@ -660,10 +660,12 @@ msgstr "Idioma"
 #: caelestia_bigscreen/pages/settings.py:459
 msgid ""
 "Game and app sources. Heroic, Lutris and similar launchers show up through "
-"the shortcuts they create."
+"the shortcuts they create. Apps hidden in the Caelestia launcher are hidden "
+"here too."
 msgstr ""
 "Fontes de jogos e apps. Heroic, Lutris e similares aparecem pelos atalhos "
-"que eles criam."
+"que eles criam. Apps ocultos no launcher do Caelestia também ficam ocultos "
+"aqui."
 
 #: caelestia_bigscreen/pages/settings.py:464
 msgid "Steam games"

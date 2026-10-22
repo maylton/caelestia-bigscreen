@@ -177,7 +177,6 @@ class ActionCard(Gtk.Box):
             box.set_valign(Gtk.Align.FILL)
             box.append(Gtk.Image(icon_name=icon, vexpand=True))
         else:
-            box.set_size_request(px(230), px(120))
             box.append(Gtk.Image(icon_name=icon))
             box.append(Gtk.Label(label=title))
         button.set_child(box)

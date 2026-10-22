@@ -1,5 +1,6 @@
 """Game and app library: system .desktop entries plus the local Steam library."""
 
+import json
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -8,6 +9,7 @@ from gi.repository import Gio, GLib
 
 from . import APP_ID
 
+SHELL_CONFIG = Path.home() / ".config/caelestia/shell.json"
 STEAM_ROOTS = [
     Path.home() / ".local/share/Steam",
     Path.home() / ".steam/steam",
@@ -39,6 +41,7 @@ class Entry:
     last_played: int = 0
     app_info: Gio.DesktopAppInfo | None = None
     uri: str | None = None
+    desktop_id: str | None = None  # .desktop id without the suffix, as the Caelestia launcher names apps
     keywords: list = field(default_factory=list)
 
     @property
@@ -99,17 +102,42 @@ def load_steam():
     return list(entries.values())
 
 
+def shell_hidden_filters():
+    """launcher.hiddenApps from the Caelestia config: app ids, or regexes written as ^...$."""
+    try:
+        filters = json.loads(SHELL_CONFIG.read_text()).get("launcher", {}).get("hiddenApps", [])
+    except (OSError, ValueError, AttributeError):
+        return []
+    return [f for f in filters if isinstance(f, str)]
+
+
+def matches_filter(desktop_id, filters):
+    for pattern in filters:
+        if pattern.startswith("^") and pattern.endswith("$"):
+            try:
+                if re.search(pattern, desktop_id):
+                    return True
+            except re.error:
+                continue
+        elif pattern == desktop_id:
+            return True
+    return False
+
+
 def load_desktop(steam_ids):
-    entries = []
+    """Returns the desktop entries and {steam appid: desktop id} for Steam shortcuts."""
+    entries, shortcuts = [], {}
     for info in Gio.AppInfo.get_all():
         if not isinstance(info, Gio.DesktopAppInfo) or not info.should_show():
             continue
         app_id = info.get_id() or ""
         if app_id.startswith(APP_ID):
             continue
+        desktop_id = app_id.removesuffix(".desktop")
         match = STEAM_URI_RE.search(info.get_commandline() or "")
         if match and match.group(1) in steam_ids:
-            continue  # Steam shortcut: the Steam entry already has the artwork
+            shortcuts[match.group(1)] = desktop_id  # the Steam entry already has the artwork
+            continue
         categories = [c for c in (info.get_categories() or "").split(";") if c]
         if "Game" not in categories:
             kind = "app"
@@ -124,9 +152,10 @@ def load_desktop(steam_ids):
             source="desktop",
             icon=info.get_icon(),
             app_info=info,
+            desktop_id=desktop_id,
             keywords=list(info.get_keywords() or []) + categories,
         ))
-    return entries
+    return entries, shortcuts
 
 
 def by_name(entry):
@@ -142,15 +171,22 @@ class Library:
     def reload(self):
         sources = self.config["sources"]
         steam = load_steam() if sources.get("steam", True) else []
-        desktop = load_desktop({e.id.split(":", 1)[1] for e in steam}) if sources.get("desktop", True) else []
-        self.entries = {e.id: e for e in steam + desktop}
+        desktop, shortcuts = load_desktop({e.id.split(":", 1)[1] for e in steam})
+        for entry in steam:
+            entry.desktop_id = shortcuts.get(entry.id.split(":", 1)[1])
+        self.entries = {e.id: e for e in steam + (desktop if sources.get("desktop", True) else [])}
 
     def get(self, entry_id):
         return self.entries.get(entry_id)
 
+    def hidden_check(self):
+        """Hidden here or in the Caelestia launcher, so both stay consistent."""
+        hidden, filters = set(self.config["hidden"]), shell_hidden_filters()
+        return lambda e: e.id in hidden or bool(e.desktop_id and matches_filter(e.desktop_id, filters))
+
     def visible(self, kind=None):
-        hidden = set(self.config["hidden"])
-        return [e for e in self.entries.values() if e.id not in hidden and kind in (None, e.kind)]
+        is_hidden = self.hidden_check()
+        return [e for e in self.entries.values() if not is_hidden(e) and kind in (None, e.kind)]
 
     def games(self):
         return sorted(self.visible("game"), key=lambda e: (-e.last_played, by_name(e)))
@@ -162,8 +198,8 @@ class Library:
         return sorted(self.visible("app"), key=by_name)
 
     def from_ids(self, ids):
-        hidden = set(self.config["hidden"])
-        return [self.entries[i] for i in ids if i in self.entries and i not in hidden]
+        is_hidden = self.hidden_check()
+        return [self.entries[i] for i in ids if i in self.entries and not is_hidden(self.entries[i])]
 
     def favorites(self):
         return self.from_ids(self.config["favorites"])
