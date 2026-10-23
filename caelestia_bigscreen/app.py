@@ -87,6 +87,7 @@ class BigScreenApp(Adw.Application):
         self.session = GameSession()
         self.session.connect("started", self.on_game_started)
         self.session.connect("ended", self.on_game_ended)
+        self.session.connect("fullscreen", self.on_fullscreen_window)
         # Apps hidden in the Caelestia launcher are hidden here too
         self.shell_monitor = Gio.File.new_for_path(str(SHELL_CONFIG)).monitor_file(Gio.FileMonitorFlags.NONE, None)
         self.shell_monitor.connect("changed", self.on_shell_config_changed)
@@ -347,6 +348,15 @@ class BigScreenApp(Adw.Application):
     def on_game_ended(self, _session):
         if self.config["return_on_exit"]:
             self.show_home()
+            if self.session.pending:
+                self.toast(_("Opening {name}… it shows up when ready").format(name=self.session.pending["entry"].name))
+
+    def on_fullscreen_window(self, _session, address):
+        """A game went fullscreen while Big Screen is in front: get out of its way."""
+        if self.state == "front":
+            self.session.follow(address)
+            self.go_background()
+            Hyprland.focus("0x" + address)
 
     # ---- Quick menu ---------------------------------------------------------------
 

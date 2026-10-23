@@ -13,12 +13,16 @@ from .system import Hyprland, HyprlandEvents
 LAUNCH_WINDOW_SECONDS = 180
 # The Steam client stays open after the game exits, so it is not part of it
 STEAM_CLIENT_CLASSES = {"steam", "steamwebhelper"}
+# Windows closing this soon after the first one opened are a launcher handing over to the game
+HANDOFF_SECONDS = 60
 
 
 class GameSession(GObject.Object):
     __gsignals__ = {
         "started": (GObject.SignalFlags.RUN_FIRST, None, (str,)),  # window address
         "ended": (GObject.SignalFlags.RUN_FIRST, None, ()),
+        # Some window entered fullscreen (address), launched from here or not
+        "fullscreen": (GObject.SignalFlags.RUN_FIRST, None, (str,)),
     }
 
     def __init__(self):
@@ -26,6 +30,8 @@ class GameSession(GObject.Object):
         self.tracked = set()
         self.pending = None  # {"entry", "active"} while waiting for the game window
         self.pending_source = 0
+        self.first_window_at = 0
+        self.handed_off = False
         self.ignored = set()
         # True while Big Screen sits behind the session windows
         self.background = False
@@ -40,6 +46,8 @@ class GameSession(GObject.Object):
         active = Hyprland.active_window() if Hyprland.available else {}
         self.pending = {"entry": entry, "active": (active.get("address") or "").removeprefix("0x")}
         self.ignored = STEAM_CLIENT_CLASSES if entry.source == "steam" else set()
+        self.first_window_at = 0
+        self.handed_off = False
         if self.pending_source:
             GLib.source_remove(self.pending_source)
         self.pending_source = GLib.timeout_add_seconds(LAUNCH_WINDOW_SECONDS, self.stop_waiting)
@@ -56,7 +64,22 @@ class GameSession(GObject.Object):
     def stop_waiting(self):
         self.pending_source = 0
         self.pending = None
+        self.first_window_at = 0
         return False
+
+    def track(self, address):
+        self.tracked.add(address)
+        if self.pending and not self.first_window_at:
+            self.first_window_at = GLib.get_monotonic_time()
+
+    @staticmethod
+    def fullscreen_window():
+        active = Hyprland.active_window()
+        if active.get("fullscreen"):
+            return active.get("address", "")
+        clients = sorted((c for c in Hyprland.clients() if c.get("fullscreen")),
+                         key=lambda c: c.get("focusHistoryID", 99))
+        return clients[0]["address"] if clients else ""
 
     def on_event(self, _events, name, data):
         if name == "openwindow":
@@ -64,7 +87,7 @@ class GameSession(GObject.Object):
             if window_class.lower() in self.ignored:
                 return
             if self.pending or self.background:
-                self.tracked.add(address)
+                self.track(address)
             if self.pending and not self.background:
                 self.emit("started", address)
         elif name == "activewindowv2":
@@ -74,8 +97,11 @@ class GameSession(GObject.Object):
                     GLib.timeout_add(400, self.check_ended, False)
             elif self.pending and not self.background and address != self.pending["active"]:
                 # The app was already open and only got activated (no new window)
-                self.tracked.add(address)
+                self.track(address)
                 self.emit("started", address)
+        elif name == "fullscreen" and data.strip() == "1" and not self.background:
+            if address := self.fullscreen_window():
+                self.emit("fullscreen", address.removeprefix("0x"))
         elif name == "closewindow" and data.strip() in self.tracked:
             self.tracked.discard(data.strip())
             if not self.tracked and self.background:
@@ -86,6 +112,14 @@ class GameSession(GObject.Object):
             return False
         ended = not self.tracked if all_closed else not Hyprland.active_window().get("address")
         if ended:
-            self.reset()
+            # A launcher that closed right after opening is handing over to the game:
+            # keep waiting for the game window (once per launch) instead of forgetting it
+            handoff = (self.pending and not self.handed_off
+                       and GLib.get_monotonic_time() - self.first_window_at < HANDOFF_SECONDS * 1e6)
+            if handoff:
+                self.handed_off = True
+                self.tracked.clear()
+            else:
+                self.reset()
             self.emit("ended")
         return False
