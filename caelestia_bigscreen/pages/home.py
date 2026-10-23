@@ -24,11 +24,13 @@ class HomePage(Gtk.Box):
         app, library = self.app, self.app.library
         clear(self.content)
         games, recents, favorites = library.games(), library.recents(), library.favorites()
-        featured = next((e for e in recents if e.is_game), games[0] if games else None)
+        # Continue lists only games; recently opened apps lead the Apps row instead
+        recent_games = [e for e in recents if e.is_game]
+        featured = recent_games[0] if recent_games else games[0] if games else None
         if featured:
             self.content.append(self.hero(featured))
-        if recents:
-            self.content.append(strip(app, _("Continue"), [card(app, e) for e in recents]))
+        if recent_games:
+            self.content.append(strip(app, _("Continue"), [Card(app, e, "poster") for e in recent_games]))
         if favorites:
             self.content.append(strip(app, _("Favorites"), [card(app, e) for e in favorites]))
         if games:
