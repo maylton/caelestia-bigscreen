@@ -19,6 +19,7 @@ DEFAULTS = {
     "show_wallpaper": True,
     "game_backdrop": True,
     "return_on_exit": True,
+    "steamgriddb_key": "",
     "sources": {"steam": True, "desktop": True},
     "favorites": [],
     "recents": [],

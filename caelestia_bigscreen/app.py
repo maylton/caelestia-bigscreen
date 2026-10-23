@@ -5,7 +5,7 @@ import os
 import gi
 from gi.repository import Adw, Gdk, Gio, GLib, Gtk
 
-from . import APP_ID, APP_NAME, i18n, nav
+from . import APP_ID, APP_NAME, artwork, i18n, nav
 from .backdrop import Backdrop
 from .config import Config
 from .dialogs import Dialogs, Splash, Toast
@@ -95,6 +95,7 @@ class BigScreenApp(Adw.Application):
         self.monitor = self.pick_monitor()
         self.theme.apply(self.monitor)
         self.build_window()
+        self.fetch_artwork()
 
     def do_command_line(self, command_line):
         options = command_line.get_options_dict().end().unpack()
@@ -622,6 +623,30 @@ class BigScreenApp(Adw.Application):
     def reload_library(self):
         self.library.reload()
         self.library_changed()
+        self.fetch_artwork()
+
+    def fetch_artwork(self, notify=False):
+        """Downloads SteamGridDB artwork for games that have none. Returns how many are looked up."""
+        key = self.config["steamgriddb_key"]
+        if not key:
+            return 0
+
+        def done(found, error):
+            if found:
+                artwork.apply_cached(self.library.entries.values())
+                # Pages in front of the user are rebuilt later, so the focus does not jump
+                if self.visible and self.current_tab != "settings":
+                    self.library_dirty = True
+                else:
+                    self.library_changed()
+            if error == "invalid-key":
+                self.toast(_("SteamGridDB rejected the API key"))
+            elif error == "network":
+                self.toast(_("Could not reach SteamGridDB"))
+            elif notify:
+                self.toast(_("Artwork found for {count} games").format(count=found) if found
+                           else _("No new artwork found"))
+        return artwork.fetch_missing(key, self.library.entries.values(), done)
 
     def on_shell_config_changed(self, _monitor, _file, _other, event):
         if event in (Gio.FileMonitorEvent.CHANGES_DONE_HINT, Gio.FileMonitorEvent.CREATED):

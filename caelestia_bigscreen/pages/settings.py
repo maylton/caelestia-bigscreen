@@ -6,7 +6,7 @@ import socket
 
 from gi.repository import Adw, GLib, Gtk
 
-from .. import APP_NAME, __version__, nav
+from .. import APP_NAME, __version__, artwork, nav
 from ..gamepad import controller_batteries
 from ..i18n import LANGUAGES, N_, _
 from ..m3 import M3Progress, SliderRow
@@ -466,6 +466,24 @@ class LibrarySection(Section):
         self.add(SwitchRow(_("System apps"), _(".desktop shortcuts"), sources.get("desktop", True),
                            lambda v: self.set_source("desktop", v), icon="view-app-grid-symbolic"))
         self.add(SettingRow(_("Reload library"), None, "view-refresh-symbolic", callback=self.reload))
+
+        self.add(group_title(_("Game artwork (SteamGridDB)")))
+        self.add(Gtk.Label(label=_("Covers, backgrounds and logos for games outside Steam come from SteamGridDB, a "
+                                   "community database. It needs a free personal API key: sign in at "
+                                   "steamgriddb.com, open Preferences › API, generate a key and paste it below."),
+                           css_classes=["setting-sub"], xalign=0, wrap=True))
+        key = self.app.config["steamgriddb_key"]
+        self.add(SettingRow(_("API key"), _("Set, ends in {end}").format(end=key[-4:]) if key
+                            else _("Not set: needed to download artwork"),
+                            "dialog-password-symbolic", callback=self.edit_key, key="sgdb-key"))
+        if key:
+            self.add(SettingRow(_("Download missing artwork"), _("Only games without artwork are looked up"),
+                                "folder-download-symbolic", callback=self.download, key="sgdb-download"))
+            self.add(SettingRow(_("Download all artwork again"), None, "view-refresh-symbolic",
+                                callback=self.redownload, key="sgdb-redownload"))
+            self.add(SettingRow(_("Remove API key"), None, "edit-delete-symbolic", callback=self.remove_key,
+                                key="sgdb-remove"))
+
         hidden = self.app.library.hidden()
         if hidden:
             self.add(group_title(_("Hidden (select to show again)")))
@@ -485,6 +503,31 @@ class LibrarySection(Section):
     def unhide(self, entry):
         self.app.config.toggle_in("hidden", entry.id)
         self.app.library_changed()
+        self.refresh()
+
+    def edit_key(self):
+        self.app.dialogs.prompt_text(_("SteamGridDB API key"), self.save_key, password=True,
+                                     submit_label=_("Save"))
+
+    def save_key(self, key):
+        self.app.config["steamgriddb_key"] = key.strip()
+        self.refresh()
+        if key.strip():
+            self.download()
+
+    def download(self):
+        count = self.app.fetch_artwork(notify=True)
+        if count:
+            self.app.toast(_("Looking up artwork for {count} games…").format(count=count))
+
+    def redownload(self):
+        artwork.clear_cache()
+        self.app.library.reload()
+        self.app.library_changed()
+        self.download()
+
+    def remove_key(self):
+        self.app.config["steamgriddb_key"] = ""
         self.refresh()
 
 

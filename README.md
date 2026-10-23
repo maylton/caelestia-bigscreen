@@ -13,6 +13,7 @@ Hyprland. It follows the colors of [Caelestia Shell](https://github.com/caelesti
 
 - Opens and closes with the controller's PS or Xbox button
 - Steam games with their artwork, plus every installed app
+- Artwork for games outside Steam from [SteamGridDB](https://www.steamgriddb.com) (optional, needs a free API key)
 - Stays behind the game while you play and comes back when it closes
 - Quick menu over games: volume, open windows and power options
 - Sound, Wi-Fi, Bluetooth, display and controller settings

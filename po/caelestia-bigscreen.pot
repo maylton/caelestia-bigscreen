@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: caelestia-bigscreen 0.1.1\n"
 "Report-Msgid-Bugs-To: https://github.com/maylton/caelestia-bigscreen/issues\n"
-"POT-Creation-Date: 2026-10-22 12:37-0300\n"
+"POT-Creation-Date: 2026-10-23 14:07-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,117 +17,134 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: caelestia_bigscreen/app.py:186 caelestia_bigscreen/header.py:8
+#: caelestia_bigscreen/app.py:188 caelestia_bigscreen/header.py:8
 #: caelestia_bigscreen/pages/home.py:35
 msgid "Games"
 msgstr ""
 
-#: caelestia_bigscreen/app.py:187
+#: caelestia_bigscreen/app.py:189
 msgid "No games found."
 msgstr ""
 
-#: caelestia_bigscreen/app.py:188 caelestia_bigscreen/header.py:8
+#: caelestia_bigscreen/app.py:190 caelestia_bigscreen/header.py:8
 #: caelestia_bigscreen/pages/home.py:44
 msgid "Apps"
 msgstr ""
 
-#: caelestia_bigscreen/app.py:188
+#: caelestia_bigscreen/app.py:190
 msgid "No apps found."
 msgstr ""
 
-#: caelestia_bigscreen/app.py:558
+#: caelestia_bigscreen/app.py:353 caelestia_bigscreen/app.py:684
+#, python-brace-format
+msgid "Opening {name}… it shows up when ready"
+msgstr ""
+
+#: caelestia_bigscreen/app.py:569
 msgid "Type"
 msgstr ""
 
-#: caelestia_bigscreen/app.py:558
+#: caelestia_bigscreen/app.py:569
 msgid "Delete"
 msgstr ""
 
-#: caelestia_bigscreen/app.py:558 caelestia_bigscreen/widgets.py:269
+#: caelestia_bigscreen/app.py:569 caelestia_bigscreen/widgets.py:269
 msgid "Space"
 msgstr ""
 
-#: caelestia_bigscreen/app.py:558
+#: caelestia_bigscreen/app.py:569
 msgid "Shift"
 msgstr ""
 
-#: caelestia_bigscreen/app.py:559 caelestia_bigscreen/dialogs.py:127
+#: caelestia_bigscreen/app.py:570 caelestia_bigscreen/dialogs.py:127
 msgid "OK"
 msgstr ""
 
-#: caelestia_bigscreen/app.py:559 caelestia_bigscreen/app.py:561
+#: caelestia_bigscreen/app.py:570 caelestia_bigscreen/app.py:572
 #: caelestia_bigscreen/dialogs.py:98 caelestia_bigscreen/dialogs.py:106
 #: caelestia_bigscreen/pages/settings.py:320
 msgid "Cancel"
 msgstr ""
 
-#: caelestia_bigscreen/app.py:561 caelestia_bigscreen/app.py:563
+#: caelestia_bigscreen/app.py:572 caelestia_bigscreen/app.py:574
 #: caelestia_bigscreen/pages/settings.py:366
 msgid "Select"
 msgstr ""
 
-#: caelestia_bigscreen/app.py:563 caelestia_bigscreen/pages/settings.py:366
+#: caelestia_bigscreen/app.py:574 caelestia_bigscreen/pages/settings.py:366
 msgid "Back"
 msgstr ""
 
-#: caelestia_bigscreen/app.py:563
+#: caelestia_bigscreen/app.py:574
 msgid "Options"
 msgstr ""
 
-#: caelestia_bigscreen/app.py:563 caelestia_bigscreen/dialogs.py:161
+#: caelestia_bigscreen/app.py:574 caelestia_bigscreen/dialogs.py:161
 #: caelestia_bigscreen/pages/home.py:96
 #: caelestia_bigscreen/pages/quickmenu.py:36
 #: caelestia_bigscreen/pages/settings.py:367
 msgid "Search"
 msgstr ""
 
-#: caelestia_bigscreen/app.py:565
+#: caelestia_bigscreen/app.py:576
 msgid "Tabs"
 msgstr ""
 
-#: caelestia_bigscreen/app.py:588
+#: caelestia_bigscreen/app.py:599
 #, python-brace-format
 msgid "Volume {value}%"
 msgstr ""
 
-#: caelestia_bigscreen/app.py:631
+#: caelestia_bigscreen/app.py:643
+msgid "SteamGridDB rejected the API key"
+msgstr ""
+
+#: caelestia_bigscreen/app.py:645
+msgid "Could not reach SteamGridDB"
+msgstr ""
+
+#: caelestia_bigscreen/app.py:647
+#, python-brace-format
+msgid "Artwork found for {count} games"
+msgstr ""
+
+#: caelestia_bigscreen/app.py:648
+msgid "No new artwork found"
+msgstr ""
+
+#: caelestia_bigscreen/app.py:666
 #, python-brace-format
 msgid "Could not open: {error}"
 msgstr ""
 
-#: caelestia_bigscreen/app.py:649
-#, python-brace-format
-msgid "Opening {name}… it shows up when ready"
-msgstr ""
-
-#: caelestia_bigscreen/app.py:658
+#: caelestia_bigscreen/app.py:693
 msgid "Log out?"
 msgstr ""
 
-#: caelestia_bigscreen/app.py:658
+#: caelestia_bigscreen/app.py:693
 msgid "Open games and apps will be closed."
 msgstr ""
 
-#: caelestia_bigscreen/app.py:658 caelestia_bigscreen/dialogs.py:191
-#: caelestia_bigscreen/pages/settings.py:499
+#: caelestia_bigscreen/app.py:693 caelestia_bigscreen/dialogs.py:191
+#: caelestia_bigscreen/pages/settings.py:542
 msgid "Log out"
 msgstr ""
 
-#: caelestia_bigscreen/app.py:661
+#: caelestia_bigscreen/app.py:696
 msgid "Restart the computer?"
 msgstr ""
 
-#: caelestia_bigscreen/app.py:661 caelestia_bigscreen/dialogs.py:197
-#: caelestia_bigscreen/pages/settings.py:505
+#: caelestia_bigscreen/app.py:696 caelestia_bigscreen/dialogs.py:197
+#: caelestia_bigscreen/pages/settings.py:548
 msgid "Restart"
 msgstr ""
 
-#: caelestia_bigscreen/app.py:663
+#: caelestia_bigscreen/app.py:698
 msgid "Shut down the computer?"
 msgstr ""
 
-#: caelestia_bigscreen/app.py:663 caelestia_bigscreen/dialogs.py:198
-#: caelestia_bigscreen/pages/settings.py:506
+#: caelestia_bigscreen/app.py:698 caelestia_bigscreen/dialogs.py:198
+#: caelestia_bigscreen/pages/settings.py:549
 msgid "Shut down"
 msgstr ""
 
@@ -177,17 +194,17 @@ msgstr ""
 msgid "Hide from library"
 msgstr ""
 
-#: caelestia_bigscreen/dialogs.py:193 caelestia_bigscreen/pages/settings.py:502
+#: caelestia_bigscreen/dialogs.py:193 caelestia_bigscreen/pages/settings.py:545
 msgid "Back to desktop"
 msgstr ""
 
 #: caelestia_bigscreen/dialogs.py:194 caelestia_bigscreen/pages/home.py:52
 #: caelestia_bigscreen/pages/quickmenu.py:59
-#: caelestia_bigscreen/pages/settings.py:494
+#: caelestia_bigscreen/pages/settings.py:537
 msgid "Power"
 msgstr ""
 
-#: caelestia_bigscreen/dialogs.py:196 caelestia_bigscreen/pages/settings.py:504
+#: caelestia_bigscreen/dialogs.py:196 caelestia_bigscreen/pages/settings.py:547
 msgid "Suspend"
 msgstr ""
 
@@ -230,7 +247,7 @@ msgid "All apps"
 msgstr ""
 
 #: caelestia_bigscreen/pages/home.py:46
-#: caelestia_bigscreen/pages/settings.py:540
+#: caelestia_bigscreen/pages/settings.py:583
 msgid "System"
 msgstr ""
 
@@ -685,64 +702,121 @@ msgstr ""
 msgid "Reload library"
 msgstr ""
 
+#: caelestia_bigscreen/pages/settings.py:470
+msgid "Game artwork (SteamGridDB)"
+msgstr ""
+
 #: caelestia_bigscreen/pages/settings.py:471
-msgid "Hidden (select to show again)"
+msgid ""
+"Covers, backgrounds and logos for games outside Steam come from SteamGridDB, "
+"a community database. It needs a free personal API key: sign in at "
+"steamgriddb.com, open Preferences › API, generate a key and paste it below."
+msgstr ""
+
+#: caelestia_bigscreen/pages/settings.py:476
+msgid "API key"
+msgstr ""
+
+#: caelestia_bigscreen/pages/settings.py:476
+#, python-brace-format
+msgid "Set, ends in {end}"
+msgstr ""
+
+#: caelestia_bigscreen/pages/settings.py:477
+msgid "Not set: needed to download artwork"
+msgstr ""
+
+#: caelestia_bigscreen/pages/settings.py:480
+msgid "Download missing artwork"
+msgstr ""
+
+#: caelestia_bigscreen/pages/settings.py:480
+msgid "Only games without artwork are looked up"
 msgstr ""
 
 #: caelestia_bigscreen/pages/settings.py:482
+msgid "Download all artwork again"
+msgstr ""
+
+#: caelestia_bigscreen/pages/settings.py:484
+msgid "Remove API key"
+msgstr ""
+
+#: caelestia_bigscreen/pages/settings.py:489
+msgid "Hidden (select to show again)"
+msgstr ""
+
+#: caelestia_bigscreen/pages/settings.py:500
 msgid "Library reloaded"
 msgstr ""
 
-#: caelestia_bigscreen/pages/settings.py:499
+#: caelestia_bigscreen/pages/settings.py:509
+msgid "SteamGridDB API key"
+msgstr ""
+
+#: caelestia_bigscreen/pages/settings.py:510
+msgid "Save"
+msgstr ""
+
+#: caelestia_bigscreen/pages/settings.py:521
+#, python-brace-format
+msgid "Looking up artwork for {count} games…"
+msgstr ""
+
+#: caelestia_bigscreen/pages/settings.py:542
 msgid "Back to the login screen"
 msgstr ""
 
-#: caelestia_bigscreen/pages/settings.py:502
+#: caelestia_bigscreen/pages/settings.py:545
 msgid "Hides Big Screen (the PS / Xbox button opens it again)"
 msgstr ""
 
-#: caelestia_bigscreen/pages/settings.py:509
+#: caelestia_bigscreen/pages/settings.py:552
 msgid "Quit Big Screen"
 msgstr ""
 
-#: caelestia_bigscreen/pages/settings.py:509
+#: caelestia_bigscreen/pages/settings.py:552
 msgid "The gamepad button stops working until it starts again"
 msgstr ""
 
-#: caelestia_bigscreen/pages/settings.py:511
+#: caelestia_bigscreen/pages/settings.py:554
 msgid "Quit Big Screen?"
 msgstr ""
 
-#: caelestia_bigscreen/pages/settings.py:511
+#: caelestia_bigscreen/pages/settings.py:554
 msgid "Quit"
 msgstr ""
 
-#: caelestia_bigscreen/pages/settings.py:527
+#: caelestia_bigscreen/pages/settings.py:570
 msgid "About"
 msgstr ""
 
-#: caelestia_bigscreen/pages/settings.py:533
+#: caelestia_bigscreen/pages/settings.py:576
 #, python-brace-format
 msgid "{hours} h {minutes} min"
 msgstr ""
 
-#: caelestia_bigscreen/pages/settings.py:538
+#: caelestia_bigscreen/pages/settings.py:581
 #, python-brace-format
 msgid "Version {version}"
 msgstr ""
 
-#: caelestia_bigscreen/pages/settings.py:539
+#: caelestia_bigscreen/pages/settings.py:582
 msgid "Computer"
 msgstr ""
 
-#: caelestia_bigscreen/pages/settings.py:541
+#: caelestia_bigscreen/pages/settings.py:584
 msgid "Kernel"
 msgstr ""
 
-#: caelestia_bigscreen/pages/settings.py:542
+#: caelestia_bigscreen/pages/settings.py:585
 msgid "Session"
 msgstr ""
 
-#: caelestia_bigscreen/pages/settings.py:543
+#: caelestia_bigscreen/pages/settings.py:586
 msgid "Uptime"
+msgstr ""
+
+#: caelestia_bigscreen/widgets.py:270
+msgid "Paste"
 msgstr ""

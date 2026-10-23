@@ -267,6 +267,7 @@ class OnScreenKeyboard(Gtk.Box):
         for key in (self.shift_key,
                     self.special("@", lambda: self.type("@")),
                     self.special(_("Space"), lambda: self.type(" "), "space"),
+                    self.special(_("Paste"), self.paste, "wide"),
                     self.special("⌫", self.backspace, "wide"),
                     self.special(submit_label, self.submit, "wide", "accent")):
             bottom.append(key)
@@ -286,6 +287,16 @@ class OnScreenKeyboard(Gtk.Box):
     def type(self, text):
         self.entry.insert_text(text, len(self.entry.get_text()))
         self.entry.set_position(-1)
+
+    def paste(self):
+        def done(clipboard, result):
+            try:
+                text = clipboard.read_text_finish(result)
+            except GLib.Error:
+                return
+            if text:
+                self.type(text.strip())
+        self.entry.get_clipboard().read_text_async(None, done)
 
     def backspace(self):
         length = len(self.entry.get_text())
@@ -312,6 +323,8 @@ class OnScreenKeyboard(Gtk.Box):
         """A physical keyboard types straight into the field."""
         if keyval == Gdk.KEY_BackSpace:
             self.backspace()
+        elif keyval in (Gdk.KEY_v, Gdk.KEY_V) and state & Gdk.ModifierType.CONTROL_MASK:
+            self.paste()
         elif keyval in (Gdk.KEY_Return, Gdk.KEY_KP_Enter):
             self.submit()
         elif (char := Gdk.keyval_to_unicode(keyval)) >= 32 and not state & (

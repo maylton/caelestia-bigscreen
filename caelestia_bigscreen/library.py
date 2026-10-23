@@ -7,7 +7,7 @@ from pathlib import Path
 
 from gi.repository import Gio, GLib
 
-from . import APP_ID
+from . import APP_ID, artwork
 
 SHELL_CONFIG = Path.home() / ".config/caelestia/shell.json"
 STEAM_ROOTS = [
@@ -175,6 +175,7 @@ class Library:
         for entry in steam:
             entry.desktop_id = shortcuts.get(entry.id.split(":", 1)[1])
         self.entries = {e.id: e for e in steam + (desktop if sources.get("desktop", True) else [])}
+        artwork.apply_cached(self.entries.values())
 
     def get(self, entry_id):
         return self.entries.get(entry_id)
