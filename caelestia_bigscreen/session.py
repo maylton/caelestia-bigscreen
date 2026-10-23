@@ -11,10 +11,13 @@ from .system import Hyprland, HyprlandEvents
 
 # A new window still counts as "the game that was just launched" for this long
 LAUNCH_WINDOW_SECONDS = 180
-# The Steam client stays open after the game exits, so it is not part of it
-STEAM_CLIENT_CLASSES = {"steam", "steamwebhelper"}
+# Launcher clients stay open after the game exits, so their windows are not part of it
+LAUNCHER_CLASSES = {"steam", "steamwebhelper", "heroic", "net.lutris.lutris", "epicgameslauncher",
+                    "com.usebottles.bottles"}
 # Windows closing this soon after the first one opened are a launcher handing over to the game
 HANDOFF_SECONDS = 60
+# An already open app gets focused right after the launch, not minutes later
+ACTIVATION_SECONDS = 10
 
 
 class GameSession(GObject.Object):
@@ -33,6 +36,7 @@ class GameSession(GObject.Object):
         self.first_window_at = 0
         self.handed_off = False
         self.ignored = set()
+        self.active_class = ""
         # True while Big Screen sits behind the session windows
         self.background = False
         self.events = HyprlandEvents()
@@ -44,8 +48,10 @@ class GameSession(GObject.Object):
 
     def launched(self, entry):
         active = Hyprland.active_window() if Hyprland.available else {}
-        self.pending = {"entry": entry, "active": (active.get("address") or "").removeprefix("0x")}
-        self.ignored = STEAM_CLIENT_CLASSES if entry.source == "steam" else set()
+        self.pending = {"entry": entry, "active": (active.get("address") or "").removeprefix("0x"),
+                        "at": GLib.get_monotonic_time()}
+        # Opening a launcher itself (Heroic, Lutris…) still follows its window
+        self.ignored = LAUNCHER_CLASSES if entry.is_game else set()
         self.first_window_at = 0
         self.handed_off = False
         if self.pending_source:
@@ -90,12 +96,17 @@ class GameSession(GObject.Object):
                 self.track(address)
             if self.pending and not self.background:
                 self.emit("started", address)
+        elif name == "activewindow":
+            # Comes right before activewindowv2, which only has the address
+            self.active_class = data.split(",", 1)[0].lower()
         elif name == "activewindowv2":
             address = "" if data.strip() in ("", ",", "0", "0x0") else data.strip()
             if not address:
                 if self.background:
                     GLib.timeout_add(400, self.check_ended, False)
-            elif self.pending and not self.background and address != self.pending["active"]:
+            elif (self.pending and not self.background and address != self.pending["active"]
+                  and self.active_class not in self.ignored
+                  and GLib.get_monotonic_time() - self.pending["at"] < ACTIVATION_SECONDS * 1e6):
                 # The app was already open and only got activated (no new window)
                 self.track(address)
                 self.emit("started", address)
