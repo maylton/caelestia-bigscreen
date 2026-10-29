@@ -67,6 +67,7 @@ class BigScreenApp(Adw.Application):
         self.built_scale = None
         self.monitor = None
         self.status_source = 0
+        self.rescale_source = 0
         self.last_focus = {}
         self.current_tab = "home"
 
@@ -95,6 +96,9 @@ class BigScreenApp(Adw.Application):
         self.monitor = self.pick_monitor()
         self.theme.apply(self.monitor)
         self.build_window()
+        monitors = Gdk.Display.get_default().get_monitors()
+        monitors.connect("items-changed", self.on_monitors_changed)
+        self.on_monitors_changed(monitors, 0, 0, monitors.get_n_items())
         self.fetch_artwork()
 
     def do_command_line(self, command_line):
@@ -219,6 +223,27 @@ class BigScreenApp(Adw.Application):
         if wanted == "auto" and Hyprland.available:
             wanted = next((m["name"] for m in Hyprland.monitors() if m.get("focused")), wanted)
         return next((m for m in monitors if m.get_connector() == wanted), monitors[0] if monitors else None)
+
+    def on_monitors_changed(self, monitors, position, _removed, added):
+        for i in range(position, position + added):
+            monitors.get_item(i).connect("notify::geometry", lambda *_: self.queue_rescale())
+        self.queue_rescale()
+
+    def queue_rescale(self):
+        """A mode change (e.g. a stream switching the monitor to 1080p) arrives as several events."""
+        if self.rescale_source:
+            GLib.source_remove(self.rescale_source)
+        self.rescale_source = GLib.timeout_add(300, self.rescale)
+
+    def rescale(self):
+        """Follows a new resolution while on screen; when hidden, prepare_map does it on the next show."""
+        self.rescale_source = 0
+        if self.win.get_visible():
+            self.prepare_map()
+            self.header.update()
+            if self.visible:
+                GLib.idle_add(self.restore_focus)
+        return False
 
     # ---- States: hidden, in front (interactive) and behind the windows ---------
 
