@@ -528,8 +528,8 @@ msgstr "Tamanho da interface"
 
 #: caelestia_bigscreen/pages/settings.py:287
 #, python-brace-format
-msgid "Automatic ({percent}%)"
-msgstr "Automático ({percent}%)"
+msgid "{percent}% (default)"
+msgstr "{percent}% (padrão)"
 
 #: caelestia_bigscreen/pages/settings.py:292
 msgid "Resolution (Hyprland)"

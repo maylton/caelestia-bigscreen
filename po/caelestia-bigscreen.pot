@@ -529,7 +529,7 @@ msgstr ""
 
 #: caelestia_bigscreen/pages/settings.py:287
 #, python-brace-format
-msgid "Automatic ({percent}%)"
+msgid "{percent}% (default)"
 msgstr ""
 
 #: caelestia_bigscreen/pages/settings.py:292

@@ -1,6 +1,7 @@
 """Theme: Caelestia Material You colours (or a default palette), scaled for TVs."""
 
 import json
+import math
 from pathlib import Path
 
 from gi.repository import Gdk, Gio, Gtk
@@ -8,6 +9,9 @@ from gi.repository import Gdk, Gio, Gtk
 STATE = Path.home() / ".local/state/caelestia"
 SCHEME_FILE = STATE / "scheme.json"
 WALLPAPER_FILE = STATE / "wallpaper/path.txt"
+
+# Interface sizes offered in the settings, relative to the automatic scale of the monitor
+UI_SIZES = [1.0, 1.15, 1.3, 1.5, 1.75, 2.0]
 
 FALLBACK = {
     "background": "0f1114",
@@ -250,13 +254,29 @@ class Theme:
 
     @staticmethod
     def auto_scale(monitor):
-        return max(0.8, min(2.6, monitor.get_geometry().height / 1080)) if monitor else 1.0
+        """Fits the 1920x1080 design to the monitor; on screens narrower than 16:9 the width decides."""
+        if not monitor:
+            return 1.0
+        geometry = monitor.get_geometry()
+        return max(0.8, min(2.6, geometry.height / 1080, geometry.width / 1920))
 
-    def apply(self, monitor=None):
+    def apply(self, monitor=None, max_scale=None):
+        """`max_scale` keeps the interface from growing wider than the monitor."""
         if monitor is not None:
-            self.scale = self.config["ui_scale"] or self.auto_scale(monitor)
+            if "ui_scale" in self.config.data:
+                self.migrate_scale(monitor)
+            self.scale = self.auto_scale(monitor) * self.config["ui_size"]
+            if max_scale:
+                self.scale = min(self.scale, math.floor(max_scale * 100) / 100)
         self.colours = shell_colours(self.config["use_shell_colors"])
         self.provider.load_from_string(build_css(self.colours, self.scale))
+
+    def migrate_scale(self, monitor):
+        """Sizes used to be absolute scales, which cut the interface on smaller resolutions
+        (e.g. a stream switching to 1080p). Keeps the size the user sees on the current monitor."""
+        legacy = self.config.data.pop("ui_scale") or 0
+        size = legacy / self.auto_scale(monitor) if legacy else 1.0
+        self.config["ui_size"] = min(UI_SIZES, key=lambda s: abs(s - size))
 
     def px(self, value):
         return round(value * self.scale)

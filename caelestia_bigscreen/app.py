@@ -65,6 +65,7 @@ class BigScreenApp(Adw.Application):
         self.home_dirty = False
         self.library_dirty = False
         self.built_scale = None
+        self.width_per_scale = 0  # how wide the built layout needs to be, per unit of scale
         self.monitor = None
         self.status_source = 0
         self.rescale_source = 0
@@ -94,7 +95,7 @@ class BigScreenApp(Adw.Application):
         self.shell_monitor.connect("changed", self.on_shell_config_changed)
         self.hold()
         self.monitor = self.pick_monitor()
-        self.theme.apply(self.monitor)
+        self.apply_scale()
         self.build_window()
         monitors = Gdk.Display.get_default().get_monitors()
         monitors.connect("items-changed", self.on_monitors_changed)
@@ -202,16 +203,35 @@ class BigScreenApp(Adw.Application):
         self.home_dirty = False
         self.go_tab(self.current_tab, focus=False)
         self.update_hints()
+        # The header and the hints cannot scroll sideways. They are measured directly, after the hints
+        # are refilled, because `main` keeps reporting its previous size until the next layout
+        needed = max(w.measure(Gtk.Orientation.HORIZONTAL, -1)[0] for w in (self.header, self.hints))
+        self.width_per_scale = needed / self.theme.scale
 
     def rebuild_ui(self, settings_section=None):
         i18n.setup(self.config["language"])
-        self.theme.apply(self.monitor)
+        self.apply_scale()
         self.build_ui()
+        self.fit_scale()
         self.header.update()
         if settings_section:
             self.open_settings(settings_section)
 
     # ---- Monitors -------------------------------------------------------------
+
+    def apply_scale(self):
+        """Scale for the monitor, never wider than it (a big size, a long translation, a narrow screen)."""
+        width = self.monitor.get_geometry().width if self.monitor else 0
+        max_scale = width * 0.98 / self.width_per_scale if width and self.width_per_scale else None
+        self.theme.apply(self.monitor, max_scale)
+
+    def fit_scale(self):
+        """Rebuilds at the monitor's scale; the second pass shrinks it once the layout width is known."""
+        for _attempt in range(2):
+            self.apply_scale()
+            if self.built_scale == self.theme.scale:
+                return
+            self.build_ui()
 
     def list_monitors(self):
         monitors = Gdk.Display.get_default().get_monitors()
@@ -262,11 +282,9 @@ class BigScreenApp(Adw.Application):
     def prepare_map(self):
         """Picks the monitor and scale before the window is mapped."""
         self.monitor = self.pick_monitor()
-        self.theme.apply(self.monitor)
         if self.monitor:
             self.backdrop.width = self.monitor.get_geometry().width
-        if self.built_scale != self.theme.scale:
-            self.build_ui()
+        self.fit_scale()
         if self.layer:
             LayerShell.set_monitor(self.win, self.monitor)
 

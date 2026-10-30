@@ -12,7 +12,7 @@ CONFIG_FILE = CONFIG_DIR / ("config.test.json" if os.environ.get("BIGSCREEN_TEST
 DEFAULTS = {
     "language": "auto",
     "monitor": "auto",  # connector name, or "auto" for the focused monitor
-    "ui_scale": 0,  # 0 = automatic, from the monitor height
+    "ui_size": 1.0,  # relative to the automatic scale, which follows the monitor resolution
     "guide_button": True,
     "select_start_combo": True,
     "use_shell_colors": True,

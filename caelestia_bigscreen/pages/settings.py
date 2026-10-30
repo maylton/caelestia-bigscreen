@@ -11,6 +11,7 @@ from ..gamepad import controller_batteries
 from ..i18n import LANGUAGES, N_, _
 from ..m3 import M3Progress, SliderRow
 from ..system import Audio, Bluetooth, Hyprland, Network, bt_icon, signal_icon
+from ..theme import UI_SIZES
 from ..widgets import SettingRow, SwitchRow, check_icon, clear, group_title, pill, scroller
 
 
@@ -257,7 +258,6 @@ class BluetoothSection(Section):
 
 # ---- Display ------------------------------------------------------------------
 
-SCALES = [0, 1.0, 1.25, 1.5, 1.75, 2.0, 2.5]
 REVERT_SECONDS = 15
 
 
@@ -280,13 +280,11 @@ class DisplaySection(Section):
                                 lambda n=name: self.set_monitor(n), key="mon:" + name))
 
         self.add(group_title(_("Interface size")))
-        for scale in SCALES:
-            if scale:
-                label = f"{round(scale * 100)}%"
-            else:
-                label = _("Automatic ({percent}%)").format(percent=round(app.theme.auto_scale(app.monitor) * 100))
-            self.add(SettingRow(label, None, "zoom-in-symbolic", check_icon(app.config["ui_scale"] == scale),
-                                lambda s=scale: self.set_scale(s), key=f"scale:{scale}"))
+        for size in UI_SIZES:
+            percent = round(size * 100)
+            label = _("{percent}% (default)").format(percent=percent) if size == 1.0 else f"{percent}%"
+            self.add(SettingRow(label, None, "zoom-in-symbolic", check_icon(app.config["ui_size"] == size),
+                                lambda s=size: self.set_size(s), key=f"size:{size}"))
 
         if Hyprland.available:
             self.add(group_title(_("Resolution (Hyprland)")))
@@ -300,8 +298,8 @@ class DisplaySection(Section):
         self.app.toast(_("Applies the next time Big Screen opens"))
         self.refresh()
 
-    def set_scale(self, scale):
-        self.app.config["ui_scale"] = scale
+    def set_size(self, size):
+        self.app.config["ui_size"] = size
         self.app.rebuild_ui(self.key)
 
     def choose_mode(self, mon):
