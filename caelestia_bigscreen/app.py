@@ -86,7 +86,7 @@ class BigScreenApp(Adw.Application):
         self.gamepads.connect("button", self.on_pad_button)
         self.gamepads.connect("home", lambda _m: self.config["guide_button"] and self.toggle())
         self.gamepads.connect("devices-changed", self.on_pads_changed)
-        self.session = GameSession()
+        self.session = GameSession(keep_fullscreen=lambda: self.config["keep_fullscreen"])
         self.session.connect("started", self.on_game_started)
         self.session.connect("ended", self.on_game_ended)
         self.session.connect("fullscreen", self.on_fullscreen_window)

@@ -432,6 +432,9 @@ class AppearanceSection(Section):
              _("Shows the artwork of the selected game"), "image-x-generic-symbolic"),
             ("return_on_exit", _("Come back when the game closes"),
              _("Big Screen stays behind the game and returns when it ends"), "view-restore-symbolic"),
+            ("keep_fullscreen", _("Keep games in fullscreen"),
+             _("Puts a game back in fullscreen when it leaves by itself right after opening"),
+             "view-fullscreen-symbolic"),
         ):
             self.add(SwitchRow(title, subtitle, self.app.config[key], lambda v, k=key: self.set(k, v), icon=icon))
 

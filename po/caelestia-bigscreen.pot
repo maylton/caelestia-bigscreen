@@ -820,3 +820,11 @@ msgstr ""
 #: caelestia_bigscreen/widgets.py:270
 msgid "Paste"
 msgstr ""
+
+#: caelestia_bigscreen/pages/settings.py:435
+msgid "Keep games in fullscreen"
+msgstr ""
+
+#: caelestia_bigscreen/pages/settings.py:436
+msgid "Puts a game back in fullscreen when it leaves by itself right after opening"
+msgstr ""

@@ -19,6 +19,7 @@ DEFAULTS = {
     "show_wallpaper": True,
     "game_backdrop": True,
     "return_on_exit": True,
+    "keep_fullscreen": True,  # put back games that drop out of fullscreen right after opening
     "steamgriddb_key": "",
     "sources": {"steam": True, "desktop": True},
     "favorites": [],

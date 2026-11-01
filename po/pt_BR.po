@@ -822,3 +822,11 @@ msgstr "Ligado há"
 #: caelestia_bigscreen/widgets.py:270
 msgid "Paste"
 msgstr "Colar"
+
+#: caelestia_bigscreen/pages/settings.py:435
+msgid "Keep games in fullscreen"
+msgstr "Manter jogos em tela cheia"
+
+#: caelestia_bigscreen/pages/settings.py:436
+msgid "Puts a game back in fullscreen when it leaves by itself right after opening"
+msgstr "Coloca o jogo de volta em tela cheia quando ele sai sozinho logo depois de abrir"

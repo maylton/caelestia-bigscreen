@@ -319,6 +319,15 @@ class Hyprland:
         cls.dispatch(f'hl.dsp.window.close({{ window = "address:{address}" }})', ["closewindow", f"address:{address}"])
 
     @classmethod
+    def set_fullscreen(cls, address):
+        """Puts a window in fullscreen. Unlike the plain dispatcher it never toggles it back off."""
+        if cls.lua():
+            run(["hyprctl", "dispatch",
+                 f'hl.dsp.window.fullscreen({{ mode = "fullscreen", action = "set", window = "address:{address}" }})'])
+        else:
+            run(["hyprctl", "--batch", f"dispatch focuswindow address:{address} ; dispatch fullscreen 0 set"])
+
+    @classmethod
     def exit(cls):
         cls.dispatch("hl.dsp.exit()", ["exit"])
 
